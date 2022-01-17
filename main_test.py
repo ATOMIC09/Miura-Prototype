@@ -90,11 +90,12 @@ async def help_dl(ctx):
 @bot.command()
 async def update(ctx):
     update = discord.Embed(title = "📌 **Update**", color = 0xFF9600)
-    update.add_field(name="1️⃣ V 1.0 | 07/11/2021", value="`• Add: Countdown\n• Add: PrivateKey\n• Add: Mute\n• Add: YT Downloader\n• Add: Music Player\n• Add: Image Processing`")
-    update.add_field(name="2️⃣ V 1.1 | 12/11/2021", value="`• Add: Audio and Video Downloader`")
-    update.add_field(name="3️⃣ V 1.2 | 29/11/2021", value="`• Add: Image Processing\n• Add: Countdown and Disconnect\n• Add: PDF To PNG Converter\n• Add: Play Audio (Local)\n• Fix: Prefix`")
-    update.add_field(name="4️⃣ V 1.3 | 17/12/2021", value="`• Add: Remove Background\n• Add: AutoSave Attachment\n• Add: Resize (width x height)\n• Add: Read Last Attachment\n• Fix: Alpha Channel for Image Processing`")
-    update.add_field(name="5️⃣ V 1.4 | 20/12/2021", value="`• Add: Text on Image\n• Add: Grayscale to Color\n• Add: Deep Fryer\n• Fix: Countdown Style\n• Fix: Cancel Command\n• Delete: PrivateKey`")
+    update.add_field(name="1️⃣ V 2.0 | 07/11/2021", value="`• Add: Countdown\n• Add: PrivateKey\n• Add: Mute\n• Add: YT Downloader\n• Add: Music Player\n• Add: Image Processing`")
+    update.add_field(name="2️⃣ V 2.1 | 12/11/2021", value="`• Add: Audio and Video Downloader`")
+    update.add_field(name="3️⃣ V 2.2 | 29/11/2021", value="`• Add: Image Processing\n• Add: Countdown and Disconnect\n• Add: PDF To PNG Converter\n• Add: Play Audio (Local)\n• Fix: Prefix`")
+    update.add_field(name="4️⃣ V 2.3 | 17/12/2021", value="`• Add: Remove Background\n• Add: AutoSave Attachment\n• Add: Resize (width x height)\n• Add: Read Last Attachment\n• Fix: Alpha Channel for Image Processing`")
+    update.add_field(name="5️⃣ V 2.4 | 20/12/2021", value="`• Add: Text on Image\n• Add: Grayscale to Color\n• Add: Deep Fryer\n• Fix: Countdown Style\n• Fix: Cancel Command\n• Delete: PrivateKey`")
+    update.add_field(name="6️⃣ V 2.5 | 12/01/2022", value="`• Add: Scamming Protection\n• Add: Role Selector\n• Fix: มี Model ของ %color แล้ว`")
     await ctx.send(embed = update)
 
 
@@ -238,25 +239,25 @@ async def countdis(ctx, timer: int):
     second_str = str(second)
 
     # เริ่มนับ
-    if bot.timer >= 0 and bot.timer < 10:
+    if bot.timer_dis >= 0 and bot.timer_dis < 10:
         message = await ctx.send(f"Time remaining: **{second_str} secs**")
 
-    elif bot.timer >= 10 and bot.timer < 60:
+    elif bot.timer_dis >= 10 and bot.timer_dis < 60:
         message = await ctx.send(f"Time remaining: **{second_str} secs**")
 
-    elif bot.timer >= 60 and bot.timer < 3600:
+    elif bot.timer_dis >= 60 and bot.timer_dis < 3600:
         message = await ctx.send(f"Time remaining: **{minute_str} mins {second_str} secs**")
 
-    elif bot.timer >= 3600 and bot.timer < 86400:
+    elif bot.timer_dis >= 3600 and bot.timer_dis < 86400:
         message = await ctx.send(f"Time remaining: **{hour_str} hours {minute_str} mins {second_str} secs**")
 
-    elif bot.timer >= 86400 and bot.timer < 2629744:
+    elif bot.timer_dis >= 86400 and bot.timer_dis < 2629744:
         message = await ctx.send(f"Time remaining: **{day_str} days {hour_str} hours {minute_str} mins {second_str} secs**")
 
-    elif bot.timer >= 2629744 and bot.timer < 31556926:
+    elif bot.timer_dis >= 2629744 and bot.timer_dis < 31556926:
         message = await ctx.send(f"Time remaining: **{month_str} months {day_str} days {hour_str} hours {minute_str} mins {second_str} secs**")
 
-    elif bot.timer >= 31556926:
+    elif bot.timer_dis >= 31556926:
         message = await ctx.send(f"Time remaining: **{year_str} years {month_str} months {day_str} days {hour_str} hours {minute_str} mins {second_str} secs**")
 
     while bot.timer_dis >= 0:
@@ -279,25 +280,25 @@ async def countdis(ctx, timer: int):
         minute_str = str(minute)
         second_str = str(second)
                 
-        if bot.timer >= 0 and bot.timer < 10:
+        if bot.timer_dis >= 0 and bot.timer_dis < 10:
             await message.edit(content=f"Time remaining: **{second_str} secs **")
 
-        elif bot.timer >= 10 and bot.timer < 60:
+        elif bot.timer_dis >= 10 and bot.timer_dis < 60:
             await message.edit(content=f"Time remaining: **{second_str} secs**")
 
-        elif bot.timer >= 60 and bot.timer < 3600:
+        elif bot.timer_dis >= 60 and bot.timer_dis < 3600:
             await message.edit(content=f"Time remaining: **{minute_str} mins {second_str} secs**")
 
-        elif bot.timer >= 3600 and bot.timer < 86400:
+        elif bot.timer_dis >= 3600 and bot.timer_dis < 86400:
             await message.edit(content=f"Time remaining: **{hour_str} hours {minute_str} mins {second_str} secs**")
 
-        elif bot.timer >= 86400 and bot.timer < 2629744:
+        elif bot.timer_dis >= 86400 and bot.timer_dis < 2629744:
             await message.edit(content=f"Time remaining: **{day_str} days {hour_str} hours {minute_str} mins {second_str} secs**")
 
-        elif bot.timer >= 2629744 and bot.timer < 31556926:
+        elif bot.timer_dis >= 2629744 and bot.timer_dis < 31556926:
             await message.edit(content=f"Time remaining: **{month_str} months {day_str} days {hour_str} hours {minute_str} mins {second_str} secs**")
 
-        elif bot.timer >= 31556926:
+        elif bot.timer_dis >= 31556926:
             await message.edit(content=f"Time remaining: **{year_str} years {month_str} months {day_str} days {hour_str} hours {minute_str} mins {second_str} secs**")
 
         await asyncio.sleep(1)
@@ -1330,45 +1331,88 @@ async def deepfry(ctx):
     #    return "⚠ **ไม่พบการเชื่อมต่อของเซ็นเซอร์**"
 
 ######################################### Automatic System ##########################################
-
-# Scamming Protection
 @bot.listen()
 async def on_message(message):
+    # Scamming Protection
     if message.author.id != bot.user.id:
+        keyword = ""
+        channel_admin = bot.get_channel(929670988092825630)
+        member = message.author
+        role = discord.utils.get(message.guild.roles, name="⚠️ HACKED ⚠️")
+
+        if "http" in message.content.lower():
+            keyword += "`http` "
+
+        if "free" in message.content.lower():
+            keyword += "`Free` "
+
+        if "nitro" in message.content.lower():
+            keyword += "`Nitro` "
+            
         if "@everyone" in message.content.lower():
-            if "Nitro" or "nitro" in message.content.lower():
-                channel_admin = bot.get_channel(929670988092825630)
-                p = discord.Embed(title = "⚠ **Scamming Detection**", color = 0xFF3C3C)
-                p.add_field(name=f"🔑 **Keyword detected**", value=f"`Nitro`")
-                p.add_field(name=f"🧑 **Sent by**", value=f"<@{message.author.id}>")
-                p.add_field(name=f"ℹ **Status**", value=f"*`Not yet deleted`*")
-                p.description = f"**[Go to message](https://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id})**"
-                await channel_admin.send(embed = p)
+            keyword += "`@everyone` "
 
-                if "http" in message.content.lower():
-                    channel_admin = bot.get_channel(929670988092825630)
-                    p2 = discord.Embed(title = "⚠ **Scamming Detection**", color = 0xFF3C3C)
-                    p2.add_field(name=f"🔑 **Keyword detected**", value=f"`Nitro`\n`http`")
-                    p2.add_field(name=f"🧑 **Sent by**", value=f"<@{message.author.id}>")
-                    p2.add_field(name=f"ℹ **Status**", value=f"*`Deleted`*")
-                    await channel_admin.send(embed = p2)
-                    
-                    member = message.author
-                    role = discord.utils.get(message.guild.roles, name="⚠️ HACKED ⚠️")
-                    h = discord.Embed(title = "⚠️ **Scamming Detected** ⚠️", color = 0xFF0000)
-                    h.description = "Free Discord Nitro Scamming"
-                    h.add_field(name=f"🧑 **Sent by**", value=f"<@{member.id}>")
-                    
-                    await member.add_roles(role)
-                    await message.delete()
-                    await message.channel.send(embed = h)
+        if "@here" in message.content.lower():
+            keyword += "`@here` "
 
-# Attachments Detection
-@bot.listen()
-async def on_message(message):
+        if "nitro" in message.content.lower() and "free" in message.content.lower() and "http" in message.content.lower():
+            await member.add_roles(role)
+            await message.delete()
+            
+            p2 = discord.Embed(title = "⚠ **Security Alert**", color = 0xFF3C3C)
+            p2.add_field(name=f"🔑 **Keyword detected**", value=keyword)
+            p2.add_field(name=f"<:windows_user_white:931065351301656626> **Sent by**", value=f"<@{message.author.id}>")
+            p2.add_field(name=f"ℹ **Status**", value=f"*`Deleted`*")
+            await channel_admin.send(embed = p2)
+
+            user = discord.Embed(title = "⚠️ **Scamming Detected** ⚠️", color = 0xFF0000)
+            user.description = "Free Discord Nitro Scamming"
+            user.add_field(name=f"<:windows_user_white:931065351301656626> **Sent by**", value=f"<@{member.id}>")
+            await message.channel.send(embed = user)
+
+        elif "free" in message.content.lower() and "@everyone" in message.content.lower() or "@here" in message.content.lower():
+            p2 = discord.Embed(title = "⚠ **Security Alert**", color = 0xFF3C3C)
+            p2.add_field(name=f"🔑 **Keyword detected**", value=keyword)
+            p2.add_field(name=f"<:windows_user_white:931065351301656626> **Sent by**", value=f"<@{message.author.id}>")
+            p2.add_field(name=f"ℹ **Status**", value=f"*`Not yet deleted`*")
+            p2.description = f"**[Go to message](https://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id})**"
+            await channel_admin.send(embed = p2)
+
+        elif "nitro" in message.content.lower() and "@everyone" in message.content.lower() or "@here" in message.content.lower():
+            await message.add_reaction("⚠")
+
+            p2 = discord.Embed(title = "⚠ **Security Alert**", color = 0xFF3C3C)
+            p2.add_field(name=f"🔑 **Keyword detected**", value=keyword)
+            p2.add_field(name=f"<:windows_user_white:931065351301656626> **Sent by**", value=f"<@{message.author.id}>")
+            p2.add_field(name=f"ℹ **Status**", value=f"*`Not yet deleted`*")
+            p2.description = f"**[Go to message](https://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id})**"
+            await channel_admin.send(embed = p2)
+
+        elif "nitro" in message.content.lower() and "free" in message.content.lower():
+            await message.add_reaction("⚠")
+            
+            p2 = discord.Embed(title = "⚠ **Security Alert**", color = 0xFF3C3C)
+            p2.add_field(name=f"🔑 **Keyword detected**", value=keyword)
+            p2.add_field(name=f"<:windows_user_white:931065351301656626> **Sent by**", value=f"<@{message.author.id}>")
+            p2.add_field(name=f"ℹ **Status**", value=f"*`Not yet deleted`*")
+            p2.description = f"**[Go to message](https://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id})**"
+            await channel_admin.send(embed = p2)
+
+        elif "http" in message.content.lower() and "free" in message.content.lower():    
+            p2 = discord.Embed(title = "⚠ **Security Alert**", color = 0xFF3C3C)
+            p2.add_field(name=f"🔑 **Keyword detected**", value=keyword)
+            p2.add_field(name=f"<:windows_user_white:931065351301656626> **Sent by**", value=f"<@{message.author.id}>")
+            p2.add_field(name=f"ℹ **Status**", value=f"*`Not yet deleted`*")
+            p2.description = f"**[Go to message](https://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id})**"
+            await channel_admin.send(embed = p2)
+
+
+    
+    # Attachments Detection
     try:
         url = message.attachments[0].url
         no1,no2,no3,no4,no5,no6,no7 = url.split("/")
+        
     except IndexError:
         print("Error: No attachments")
 
@@ -1380,7 +1424,7 @@ async def on_message(message):
                 print('Saving : ' + Name)
                 shutil.copyfileobj(r.raw, out_file)
 
-# List
+# List of Role & Emoji
 original_num_list = ['1️⃣',
             '2️⃣',
             '3️⃣',
@@ -1556,7 +1600,7 @@ async def on_raw_reaction_add(payload):
                 bot.role = discord.utils.get(guild.roles, name = payload.emoji.name)
 
             member = discord.utils.find(lambda m : m.id == payload.user_id, guild.members)
-            print(f"member : {member.id}")
+            print(f"Member ID : {member.id}")
             if member.id != 907247505346035752:
                 if bot.role is not None:
                     if member is not None:
@@ -1565,7 +1609,7 @@ async def on_raw_reaction_add(payload):
                             print("Role Add Done")
                         else:
                             bot.member_request = member
-                            await member.add_roles(discord.utils.get(guild.roles, name = 'Pending Approval'))
+                            await member.add_roles(discord.utils.get(guild.roles, name = 'Pending Role Approval'))
                             # ส่งคำขอ
                             channel = bot.get_channel(929670988092825630)
                             h = discord.Embed(title = "🔧 **Role Request**", color = 0x80FF81)
@@ -1630,7 +1674,7 @@ async def on_raw_reaction_add(payload):
             if payload.emoji.name == 'Approve':
                 member = bot.member_request
                 await member.add_roles(bot.role)
-                await member.remove_roles(discord.utils.get(guild.roles, name = 'Pending Approval'))
+                await member.remove_roles(discord.utils.get(guild.roles, name = 'Pending Role Approval'))
                 print("Role Add Done")
                 print("Approved")
                 msg = await bot.get_channel(929670988092825630).fetch_message(bot.rolereq_message.id)
@@ -1648,7 +1692,7 @@ async def on_raw_reaction_add(payload):
                 print("Denied")
                 member = bot.member_request
                 await member.remove_roles(bot.role)
-                await member.remove_roles(discord.utils.get(guild.roles, name = 'Pending Approval'))
+                await member.remove_roles(discord.utils.get(guild.roles, name = 'Pending Role Approval'))
                 msg = await bot.get_channel(929670988092825630).fetch_message(bot.rolereq_message.id)
                 await msg.clear_reaction(approve_emoji)
                 await msg.clear_reaction(deny_emoji)
