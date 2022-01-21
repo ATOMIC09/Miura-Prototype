@@ -31,5 +31,5 @@ def save_response_content(response, destination):
 
 if __name__ == "__main__":
     file_id = '1rVl9NFS21ckBAD7tEYGrZkpHWtPZvtfy'
-    destination = 'A:/Documents/GitHub/Miura-EQ/model/colorization_release_v2.caffemodel'
+    destination = 'A:/Documents/GitHub/Miura-Prototype/model/colorization_release_v2.caffemodel'
     download_file_from_google_drive(file_id, destination)
