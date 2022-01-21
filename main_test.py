@@ -1,3 +1,4 @@
+from unittest import async_case
 import discord
 from discord.ext import commands
 from math import factorial
@@ -26,25 +27,29 @@ from time import sleep
 from discord.ext import tasks, commands
 import serial
 import gdrive_dl
+import audio2video
+import moviepy
+import earrape_warning
 
 intents = discord.Intents.default()
 intents.members = True
 
 bot = commands.Bot(command_prefix='-', description="wat", intents=intents)
 bot.remove_command('help')
-bot.version = "Version 2.5 Beta"
+bot.version = "Version 2.6 Beta"
 
 @bot.command()
 async def help(ctx):
     help = discord.Embed(title = "❔ **Help**", color = 0xFF9600)
     help.add_field(name="🖼️ Image Processing", value="`%help_image`")
+    help.add_field(name="🎬 Video Processing", value="`%help_video`")
     help.add_field(name="🎵 เพลง", value="`%help_music`")
     help.add_field(name="⬇ Downloader", value="`%help_dl`")
     help.add_field(name="⏲️ นับถอยหลัง", value="`%countdown [เวลา]`")
     help.add_field(name="⏏ นับถอยหลังและตัดการเชื่อมต่อ", value="`%countdis [เวลา]`")
     help.add_field(name="🔇 ปิดเสียงสมาชิก", value="`%mute [@USER] [เวลา]`")
     help.add_field(name="🔊 ยกเลิกการปิดเสียง", value="`%unmute [@USER]`")
-    help.add_field(name="📄➡🖼️ แปลง PDF เป็นรูปภาพ", value="`%pdf2png`\n`%pdf2png_zip`")
+    help.add_field(name="📄 แปลง PDF เป็นรูปภาพ", value="`%pdf2png`\n`%pdf2png_zip`")
     help.add_field(name="❎ ยกเลิกคำสั่ง", value="`%c_[ชื่อคำสั่ง]`")
     await ctx.send(embed = help)
 
@@ -55,7 +60,7 @@ async def help_music(ctx):
     music.add_field(name="📶 เรียกบอท", value="`%summon`")
     music.add_field(name="⏏️ เตะบอท", value="`%dis`")
     music.add_field(name="▶️ เปิดเพลง", value="`%p [URL]`")
-    music.add_field(name="▶️ 🖥 เปิดเพลงแนบไฟล์", value="`%plocal` + แนบไฟล์เสียง")
+    music.add_field(name="🖥 เปิดเพลงแบบแนบไฟล์", value="`%plocal` + แนบไฟล์เสียง")
     music.add_field(name="⏭️ ข้าม", value="`%s`")
     music.add_field(name="⏸️ พัก", value="`%pause`")
     music.add_field(name="⏯️ เล่นต่อ", value="`%resume`")
@@ -74,8 +79,16 @@ async def help_image(ctx):
     image.add_field(name="↔ ยืดภาพ", value="`%wide`")
     image.add_field(name="↔↔ ยืดดดดดภาพ", value="`%ultrawide`")
     image.add_field(name="↗ ปรับสเกลภาพ", value="`%resize [PERCENT%]`\n`%resize [Width]x[Height]`\n\n**Ex:**\n`%resize 50`\n`%resize 50%`\n`%resize 1280x720`\n`%resize 1280 720`")
-    image.add_field(name="✏ เขียนข้อความบนภาพ", value="`%text [ข้อความ] | [สี] | [ขนาด] | [ตำแหน่ง] | [ความหนา]`\n(ไม่จำเป็นต้องกรอกข้อมูลทั้งหมด)\n\n**Ex:**\n`%text HELLO | น้ำเงิน | 5 | ล่าง | 3`")
+    image.add_field(name="✏ เขียนข้อความบนภาพ", value="`%text [ข้อความ] | [สี] | [ขนาด] | [ตำแหน่ง] | [ความหนา]`\n*(ไม่จำเป็นต้องกรอกข้อมูลทั้งหมด)*\n\n**Ex:**\n`%text HELLO | น้ำเงิน | 5 | ล่าง | 3`")
     await ctx.send(embed = image)
+
+@bot.command()
+async def help_video(ctx):
+    video = discord.Embed(title = "🎬 **Video Processing**", color = 0xFF9600)
+    video.add_field(name="🔨 สร้างวิดีโอจากไฟล์ภาพและเสียง", value="`%imgaudio`\n*(ต้องส่ง**ภาพ**ก่อนใช้คำสั่ง)*")
+    video.add_field(name="🧲 นำคลิปวิดีโอมาต่อกัน", value="`%videomix`\n*(ต้องส่ง**วิดีโอ**ก่อนใช้คำสั่ง)*")
+    await ctx.send(embed = video)
+    
 
 @bot.command()
 async def help_dl(ctx):
@@ -96,6 +109,7 @@ async def update(ctx):
     update.add_field(name="4️⃣ V 2.3 | 17/12/2021", value="`• Add: Remove Background\n• Add: AutoSave Attachment\n• Add: Resize (width x height)\n• Add: Read Last Attachment\n• Fix: Alpha Channel for Image Processing`")
     update.add_field(name="5️⃣ V 2.4 | 20/12/2021", value="`• Add: Text on Image\n• Add: Grayscale to Color\n• Add: Deep Fryer\n• Fix: Countdown Style\n• Fix: Cancel Command\n• Delete: PrivateKey`")
     update.add_field(name="6️⃣ V 2.5 | 12/01/2022", value="`• Add: Scamming Protection\n• Add: Role Selector\n• Fix: มี Model ของ %color แล้ว`")
+    update.add_field(name="7️⃣ V 2.6 | 21/01/2022", value="`• Add: Earrape Warning\n• Add: Video Processing`")
     await ctx.send(embed = update)
 
 
@@ -1306,6 +1320,82 @@ async def deepfry(ctx):
         file = discord.File("deepfryer_output/miura_autosave-fry.png")
         await ctx.send(file=file)
 
+@bot.command()
+async def imgaudio(ctx):
+    async with ctx.typing():
+        # Image
+        imgName = "audio2video_image.png"
+        try:
+            os.rename("miura_autosave",imgName)
+            shutil.move(imgName,f"audio2video_image_input/{imgName}")
+        except:
+            os.remove(imgName)
+            os.rename("miura_autosave",imgName)
+            shutil.move(imgName,f"audio2video_image_input/{imgName}")
+
+        await ctx.send("🔊 **Waiting for audio file**")
+        await asyncio.sleep(15)
+
+        try:
+            # Audio
+            mp3Name = "audio2video_audio.mp3"
+            try:
+                os.rename("miura_autosave",mp3Name)
+                shutil.move(mp3Name,f"audio2video_audio_input/{mp3Name}")
+            except:
+                os.remove(mp3Name)
+                os.rename("miura_autosave",mp3Name)
+                shutil.move(mp3Name,f"audio2video_audio_inpust/{mp3Name}")
+
+
+            image_path = "A:/Documents/GitHub/Miura-Prototype/audio2video_image_input/audio2video_image.png"
+            audio_path = "A:/Documents/GitHub/Miura-Prototype/audio2video_audio_input/audio2video_audio.mp3"
+            output_path = "A:/Documents/GitHub/Miura-Prototype/audio2video_video_output/audio2video_output.mp4"
+            audio2video.add_static_image_to_audio(image_path, audio_path, output_path)
+
+            file = discord.File(output_path)
+            await ctx.send(file=file)
+            os.remove(image_path)
+            os.remove(audio_path)
+            os.remove(output_path)
+        except:
+            await ctx.send("<:Deny:921703523111022642> **Send audio too late**")
+
+@bot.command()
+async def videomix(ctx):
+    async with ctx.typing():
+        FirstName = "videomix1.mp4"
+        try:
+            os.rename("miura_autosave",FirstName)
+        except:
+            os.remove(FirstName)
+            os.rename("miura_autosave",FirstName)
+
+        await ctx.send("📹 **Waiting for video file**")
+        await asyncio.sleep(20)
+        try:
+            SecondName = "videomix2.mp4"
+            try:
+                os.rename("miura_autosave",SecondName)
+            except:
+                os.remove(SecondName)
+                os.rename("miura_autosave",SecondName)
+
+            clip1 = moviepy.editor.VideoFileClip("videomix1.mp4")
+            clip2 = moviepy.editor.VideoFileClip("videomix2.mp4")
+
+            output = moviepy.editor.concatenate_videoclips([clip1, clip2])
+            output.write_videofile("videomixed.mp4")
+
+            file = discord.File("A:/Documents/GitHub/Miura-Prototype/videomixed.mp4")
+            await ctx.send(file=file)
+            os.remove("videomix1.mp4")
+            os.remove("videomix2.mp4")
+            os.remove("videomixed.mp4")
+        except:
+            await ctx.send("<:Deny:921703523111022642> **Send video too late**")
+    
+
 
 # Minecraft ESP32 Server Log
 #async def background_task():
@@ -1331,6 +1421,11 @@ async def deepfry(ctx):
     #    return "⚠ **ไม่พบการเชื่อมต่อของเซ็นเซอร์**"
 
 ######################################### Automatic System ##########################################
+decisionFunctionMark = lambda loudness, maxamp: maxamp > min(110, ((loudness + 1) ** 2 * 0.1 + 3) / 0.5 * -(loudness + 1))
+decisionFunctionDelete = lambda loudness, maxamp: maxamp > min(110, ((loudness - 1) ** 2 * 0.1 + 2) / 0.3 * -(loudness - 1) + 25)
+
+check_files = ("mp4", "mov", "mp3", "flac", "wav", "ogg")
+
 @bot.listen()
 async def on_message(message):
     # Scamming Protection
@@ -1423,6 +1518,26 @@ async def on_message(message):
             with open(Name, 'wb') as out_file:
                 print('Saving : ' + Name)
                 shutil.copyfileobj(r.raw, out_file)
+
+    # Earrape Warning
+    if len(message.attachments) > 0:
+        for attachment in message.attachments:
+            if attachment.filename.endswith(check_files):
+                data = await attachment.read()
+                try:
+                    loudness, maxamp, time = earrape_warning.check_audio(data)
+                except Exception as error:
+                    print(f"Error occured while processing file {attachment.filename}")
+                    print(f"Error: {error}")
+                else:
+                    if decisionFunctionDelete(loudness, maxamp):
+                        await message.add_reaction("🔊")
+                        await message.add_reaction("⚠️")
+
+                    elif decisionFunctionMark(loudness, maxamp):
+                        await message.add_reaction("🔊")
+                        await message.add_reaction("<:Deny:921703523111022642>")
+
 
 # List of Role & Emoji
 original_num_list = ['1️⃣',
