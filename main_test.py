@@ -1524,6 +1524,10 @@ async def on_message(message):
         for attachment in message.attachments:
             if attachment.filename.endswith(check_files):
                 data = await attachment.read()
+                #filename = "earrape.mp3"
+                #with open(filename, "wb") as file:
+                    #file.write(data)
+
                 try:
                     loudness, maxamp, time = earrape_warning.check_audio(data)
                 except Exception as error:
@@ -1533,10 +1537,14 @@ async def on_message(message):
                     if decisionFunctionDelete(loudness, maxamp):
                         await message.add_reaction("🔊")
                         await message.add_reaction("⚠️")
+                        #os.remove("earrape.mp3")
+                        #os.remove("earrape_out.mp3")
 
                     elif decisionFunctionMark(loudness, maxamp):
                         await message.add_reaction("🔊")
-                        await message.add_reaction("<:Deny:921703523111022642>")
+                        await message.add_reaction("⚡")
+                        #os.remove("earrape.mp3")
+                        #os.remove("earrape_out.mp3")
 
 
 # List of Role & Emoji
@@ -1642,280 +1650,282 @@ async def addrole(ctx):
 # Role Selector
 @bot.event
 async def on_raw_reaction_add(payload):
-    if bot.loading == False:
-        auth = False
-        message_id = payload.message_id
-        check_channel = 929670988092825630
-        try:
-            msg_id = bot.addrole_message.id
-        except:
-            msg_id = 000000000000000000
+    if payload.user_id != 907247505346035752:
+        if bot.loading == False:
+            auth = False
+            message_id = payload.message_id
+            check_channel = 929670988092825630
+            try:
+                msg_id = bot.addrole_message.id
+            except:
+                msg_id = 000000000000000000
 
-        guild_id = payload.guild_id
-        guild = discord.utils.find(lambda g : g.id == guild_id, bot.guilds)
-        
-        member = discord.utils.find(lambda m : m.id == payload.user_id, guild.members)
-        if message_id == msg_id:
-            if payload.emoji.name == '1️⃣':
-                bot.role = discord.utils.get(guild.roles, name = 'PrivateChatKey')
-                auth = True
-            elif payload.emoji.name == '2️⃣':
-                bot.role = discord.utils.get(guild.roles, name = 'President')
-                auth = True
-            elif payload.emoji.name == '3️⃣':
-                bot.role = discord.utils.get(guild.roles, name = 'Streamer')
-                auth = True
-            elif payload.emoji.name == '4️⃣':
-                bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ603')
-            elif payload.emoji.name == '5️⃣':
-                bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ604')
-            elif payload.emoji.name == '6️⃣':
-                bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ605')
-            elif payload.emoji.name == '7️⃣':
-                bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ609')
-            elif payload.emoji.name == '8️⃣':
-                bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ610')
-            elif payload.emoji.name == '9️⃣':
-                bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ611')
-            elif payload.emoji.name == emoji_list[0]:
-                bot.role = discord.utils.get(guild.roles, name = 'Order of the First')
-            elif payload.emoji.name == emoji_list[1]:
-                bot.role = discord.utils.get(guild.roles, name = 'นักตัดงานคุณภาพ')
-            elif payload.emoji.name == emoji_list[2]:
-                bot.role = discord.utils.get(guild.roles, name = 'Bot Developer')
-            elif payload.emoji.name == emoji_list[3]:
-                bot.role = discord.utils.get(guild.roles, name = 'เสพกาววีทูบเบอร์')
-            elif payload.emoji.name == emoji_list[4]:
-                bot.role = discord.utils.get(guild.roles, name = 'Programmer')
-            elif payload.emoji.name == emoji_list[5]:
-                bot.role = discord.utils.get(guild.roles, name = 'Sportsman')
-            elif payload.emoji.name == emoji_list[6]:
-                bot.role = discord.utils.get(guild.roles, name = "PlayerUnknown's Battlegrounds")
-            elif payload.emoji.name == emoji_list[7]:
-                bot.role = discord.utils.get(guild.roles, name = 'Microsoft Flight Simulator')
-            elif payload.emoji.name == emoji_list[8]:
-                bot.role = discord.utils.get(guild.roles, name = 'League of Legends')
-            elif payload.emoji.name == emoji_list[9]:
-                bot.role = discord.utils.get(guild.roles, name = 'Rainbow Six Siege')
-            elif payload.emoji.name == emoji_list[10]:
-                bot.role = discord.utils.get(guild.roles, name = 'Dead by Daylight')
-            elif payload.emoji.name == emoji_list[11]:
-                bot.role = discord.utils.get(guild.roles, name = 'Genshin Impact')
-            elif payload.emoji.name == emoji_list[12]:
-                bot.role = discord.utils.get(guild.roles, name = 'Forza Player')
-            elif payload.emoji.name == emoji_list[13]:
-                bot.role = discord.utils.get(guild.roles, name = 'Minecraft')
-            elif payload.emoji.name == emoji_list[14]:
-                bot.role = discord.utils.get(guild.roles, name = 'Valorant')
-            elif payload.emoji.name == emoji_list[15]:
-                bot.role = discord.utils.get(guild.roles, name = 'คณะล่าผี')
-            elif payload.emoji.name == emoji_list[16]:
-                bot.role = discord.utils.get(guild.roles, name = 'Roblox')
-            else:
-                bot.role = discord.utils.get(guild.roles, name = payload.emoji.name)
-
-            member = discord.utils.find(lambda m : m.id == payload.user_id, guild.members)
-            print(f"Member ID : {member.id}")
-            if member.id != 907247505346035752:
-                if bot.role is not None:
-                    if member is not None:
-                        if auth == False:
-                            await member.add_roles(bot.role)
-                            print("Role Add Done")
-                        else:
-                            bot.member_request = member
-                            await member.add_roles(discord.utils.get(guild.roles, name = 'Pending Role Approval'))
-                            # ส่งคำขอ
-                            channel = bot.get_channel(929670988092825630)
-                            h = discord.Embed(title = "🔧 **Role Request**", color = 0x80FF81)
-                            h.add_field(name=f"🎩 **Requested role**", value=f"`{bot.role}`")
-                            h.add_field(name=f"🧑 **Requested by**", value=f"<@{member.id}>")
-                            h.add_field(name=f"❔ **Status**", value="*`Unconfirmed`*")
-                            message = await channel.send(embed = h)
-                            print(f"ROLE : {bot.role}")
-                            bot.rolereq_message = message
-                            
-                            # เพิ่ม Reaction
-                            approve_emoji = "<:Approve:921703512382009354>"
-                            deny_emoji = "<:Deny:921703523111022642>"
-                            await channel.fetch_message(message.id)
-                            await message.add_reaction(approve_emoji)
-                            await message.add_reaction(deny_emoji)
-                            print(f"bot.rolereq_message.id : {bot.rolereq_message.id}")
-                            print(f"payload.message_id : {payload.message_id}")
-                            payload.message_id = bot.rolereq_message.id
-
-                            msg = await bot.get_channel(929670988092825630).fetch_message(payload.message_id)
-                            bot.msg_id = msg.id # ไอดีข้อความ
-                            bot.msg_au_id = msg.author.id # ไอดีคนเขียนข้อความ
-                            print(f"------------------------- 1 -------------------------")
-                            print(f"ROLE : {bot.role}")
-                            print(f"msg_id : {msg.id}")
-                            print(f"msg.author.id : {msg.author.id}")
-                            print(f"-----------------------------------------------------\n")
-                    else:
-                        print("Member not found")
-                else:
-                    print("Role not found")
+            guild_id = payload.guild_id
+            guild = discord.utils.find(lambda g : g.id == guild_id, bot.guilds)
             
-            print(f"------------------------- 2 ----------------------------")
-            print(f"ROLE : {bot.role}")
-            print(f"msg_id : {bot.msg_id}")
-            print(f"TRACK_MSG_ID2 : {payload.message_id}")
-            print(f"message_author_id : {bot.msg_au_id}")
-            print(f"--------------------------------------------------------\n")
+            member = discord.utils.find(lambda m : m.id == payload.user_id, guild.members)
+            if message_id == msg_id:
+                if payload.emoji.name == '1️⃣':
+                    bot.role = discord.utils.get(guild.roles, name = 'PrivateChatKey')
+                    auth = True
+                elif payload.emoji.name == '2️⃣':
+                    bot.role = discord.utils.get(guild.roles, name = 'President')
+                    auth = True
+                elif payload.emoji.name == '3️⃣':
+                    bot.role = discord.utils.get(guild.roles, name = 'Streamer')
+                    auth = True
+                elif payload.emoji.name == '4️⃣':
+                    bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ603')
+                elif payload.emoji.name == '5️⃣':
+                    bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ604')
+                elif payload.emoji.name == '6️⃣':
+                    bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ605')
+                elif payload.emoji.name == '7️⃣':
+                    bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ609')
+                elif payload.emoji.name == '8️⃣':
+                    bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ610')
+                elif payload.emoji.name == '9️⃣':
+                    bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ611')
+                elif payload.emoji.name == emoji_list[0]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Order of the First')
+                elif payload.emoji.name == emoji_list[1]:
+                    bot.role = discord.utils.get(guild.roles, name = 'นักตัดงานคุณภาพ')
+                elif payload.emoji.name == emoji_list[2]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Bot Developer')
+                elif payload.emoji.name == emoji_list[3]:
+                    bot.role = discord.utils.get(guild.roles, name = 'เสพกาววีทูบเบอร์')
+                elif payload.emoji.name == emoji_list[4]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Programmer')
+                elif payload.emoji.name == emoji_list[5]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Sportsman')
+                elif payload.emoji.name == emoji_list[6]:
+                    bot.role = discord.utils.get(guild.roles, name = "PlayerUnknown's Battlegrounds")
+                elif payload.emoji.name == emoji_list[7]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Microsoft Flight Simulator')
+                elif payload.emoji.name == emoji_list[8]:
+                    bot.role = discord.utils.get(guild.roles, name = 'League of Legends')
+                elif payload.emoji.name == emoji_list[9]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Rainbow Six Siege')
+                elif payload.emoji.name == emoji_list[10]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Dead by Daylight')
+                elif payload.emoji.name == emoji_list[11]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Genshin Impact')
+                elif payload.emoji.name == emoji_list[12]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Forza Player')
+                elif payload.emoji.name == emoji_list[13]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Minecraft')
+                elif payload.emoji.name == emoji_list[14]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Valorant')
+                elif payload.emoji.name == emoji_list[15]:
+                    bot.role = discord.utils.get(guild.roles, name = 'คณะล่าผี')
+                elif payload.emoji.name == emoji_list[16]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Roblox')
+                else:
+                    bot.role = discord.utils.get(guild.roles, name = payload.emoji.name)
 
-            print(f"check_channel : {check_channel}")
-            print(f"payload.channel.id : {payload.channel_id}")
+                member = discord.utils.find(lambda m : m.id == payload.user_id, guild.members)
+                print(f"Member ID : {member.id}")
+                if member.id != 907247505346035752:
+                    if bot.role is not None:
+                        if member is not None:
+                            if auth == False:
+                                await member.add_roles(bot.role)
+                                print("Role Add Done")
+                            else:
+                                bot.member_request = member
+                                await member.add_roles(discord.utils.get(guild.roles, name = 'Pending Role Approval'))
+                                # ส่งคำขอ
+                                channel = bot.get_channel(929670988092825630)
+                                h = discord.Embed(title = "🔧 **Role Request**", color = 0x80FF81)
+                                h.add_field(name=f"🎩 **Requested role**", value=f"`{bot.role}`")
+                                h.add_field(name=f"🧑 **Requested by**", value=f"<@{member.id}>")
+                                h.add_field(name=f"❔ **Status**", value="*`Unconfirmed`*")
+                                message = await channel.send(embed = h)
+                                print(f"ROLE : {bot.role}")
+                                bot.rolereq_message = message
+                                
+                                # เพิ่ม Reaction
+                                approve_emoji = "<:Approve:921703512382009354>"
+                                deny_emoji = "<:Deny:921703523111022642>"
+                                await channel.fetch_message(message.id)
+                                await message.add_reaction(approve_emoji)
+                                await message.add_reaction(deny_emoji)
+                                print(f"bot.rolereq_message.id : {bot.rolereq_message.id}")
+                                print(f"payload.message_id : {payload.message_id}")
+                                payload.message_id = bot.rolereq_message.id
 
-        
-        elif bot.rolereq_message.id == payload.message_id and member.id != 907247505346035752:
-            print(f"member elif : {member.id}")
-            print("================== REQUESTED ==================")
-            print(f"ROLE : {bot.role}")
-            print(f"TRACK_MSG_ID3 : {payload.message_id}")
+                                msg = await bot.get_channel(929670988092825630).fetch_message(payload.message_id)
+                                bot.msg_id = msg.id # ไอดีข้อความ
+                                bot.msg_au_id = msg.author.id # ไอดีคนเขียนข้อความ
+                                print(f"------------------------- 1 -------------------------")
+                                print(f"ROLE : {bot.role}")
+                                print(f"msg_id : {msg.id}")
+                                print(f"msg.author.id : {msg.author.id}")
+                                print(f"-----------------------------------------------------\n")
+                        else:
+                            print("Member not found")
+                    else:
+                        print("Role not found")
+                
+                print(f"------------------------- 2 ----------------------------")
+                print(f"ROLE : {bot.role}")
+                print(f"msg_id : {bot.msg_id}")
+                print(f"TRACK_MSG_ID2 : {payload.message_id}")
+                print(f"message_author_id : {bot.msg_au_id}")
+                print(f"--------------------------------------------------------\n")
 
-            msg = await bot.get_channel(929670988092825630).fetch_message(payload.message_id)
-            bot.msg_id = msg.id # ไอดีข้อความ
-            bot.msg_au_id = msg.author.id # ไอดีคนเขียนข้อความ
-            user_react = payload.message_id # ไอดีคนรีแอ็ค
+                print(f"check_channel : {check_channel}")
+                print(f"payload.channel.id : {payload.channel_id}")
 
-            print(f"bot.msg_au_id : {bot.msg_au_id}")
-            print(f"user_react : {bot.msg_au_id}") #user_react
-            #if bot.msg_au_id != 907247505346035752:
-            approve_emoji = "<:Approve:921703512382009354>"
-            deny_emoji = "<:Deny:921703523111022642>"
+            
+            elif bot.rolereq_message.id == payload.message_id and member.id != 907247505346035752:
+                print(f"member elif : {member.id}")
+                print("================== REQUESTED ==================")
+                print(f"ROLE : {bot.role}")
+                print(f"TRACK_MSG_ID3 : {payload.message_id}")
 
-            if payload.emoji.name == 'Approve':
-                member = bot.member_request
-                await member.add_roles(bot.role)
-                await member.remove_roles(discord.utils.get(guild.roles, name = 'Pending Role Approval'))
-                print("Role Add Done")
-                print("Approved")
-                msg = await bot.get_channel(929670988092825630).fetch_message(bot.rolereq_message.id)
-                #await msg.remove_reaction(approve_emoji, payload.member)
-                await msg.clear_reaction(approve_emoji)
-                await msg.clear_reaction(deny_emoji)
+                msg = await bot.get_channel(929670988092825630).fetch_message(payload.message_id)
+                bot.msg_id = msg.id # ไอดีข้อความ
+                bot.msg_au_id = msg.author.id # ไอดีคนเขียนข้อความ
+                user_react = payload.message_id # ไอดีคนรีแอ็ค
 
-                h = discord.Embed(title = "🔧 **Role Request**", color = 0x80FF81)
-                h.add_field(name=f"🎩 **Requested role**", value=f"`{bot.role}`")
-                h.add_field(name=f"🧑 **Requested by**", value=f"<@{member.id}>")
-                h.add_field(name=f"{approve_emoji} **Approved by**", value=f"<@{payload.member.id}>")
-                await bot.rolereq_message.edit(embed=h)
+                print(f"bot.msg_au_id : {bot.msg_au_id}")
+                print(f"user_react : {bot.msg_au_id}") #user_react
+                #if bot.msg_au_id != 907247505346035752:
+                approve_emoji = "<:Approve:921703512382009354>"
+                deny_emoji = "<:Deny:921703523111022642>"
 
-            elif payload.emoji.name == 'Deny':
-                print("Denied")
-                member = bot.member_request
-                await member.remove_roles(bot.role)
-                await member.remove_roles(discord.utils.get(guild.roles, name = 'Pending Role Approval'))
-                msg = await bot.get_channel(929670988092825630).fetch_message(bot.rolereq_message.id)
-                await msg.clear_reaction(approve_emoji)
-                await msg.clear_reaction(deny_emoji)
+                if payload.emoji.name == 'Approve':
+                    member = bot.member_request
+                    await member.add_roles(bot.role)
+                    await member.remove_roles(discord.utils.get(guild.roles, name = 'Pending Role Approval'))
+                    print("Role Add Done")
+                    print("Approved")
+                    msg = await bot.get_channel(929670988092825630).fetch_message(bot.rolereq_message.id)
+                    #await msg.remove_reaction(approve_emoji, payload.member)
+                    await msg.clear_reaction(approve_emoji)
+                    await msg.clear_reaction(deny_emoji)
 
-                h = discord.Embed(title = "🔧 **Role Request**", color = 0x80FF81)
-                h.add_field(name=f"🎩 **Requested role**", value=f"`{bot.role}`")
-                h.add_field(name=f"🧑 **Requested by**", value=f"<@{member.id}>")
-                h.add_field(name=f"{deny_emoji} **Rejected by**", value=f"<@{payload.member.id}>")
-                await bot.rolereq_message.edit(embed=h)
+                    h = discord.Embed(title = "🔧 **Role Request**", color = 0x80FF81)
+                    h.add_field(name=f"🎩 **Requested role**", value=f"`{bot.role}`")
+                    h.add_field(name=f"🧑 **Requested by**", value=f"<@{member.id}>")
+                    h.add_field(name=f"{approve_emoji} **Approved by**", value=f"<@{payload.member.id}>")
+                    await bot.rolereq_message.edit(embed=h)
+
+                elif payload.emoji.name == 'Deny':
+                    print("Denied")
+                    member = bot.member_request
+                    await member.remove_roles(bot.role)
+                    await member.remove_roles(discord.utils.get(guild.roles, name = 'Pending Role Approval'))
+                    msg = await bot.get_channel(929670988092825630).fetch_message(bot.rolereq_message.id)
+                    await msg.clear_reaction(approve_emoji)
+                    await msg.clear_reaction(deny_emoji)
+
+                    h = discord.Embed(title = "🔧 **Role Request**", color = 0x80FF81)
+                    h.add_field(name=f"🎩 **Requested role**", value=f"`{bot.role}`")
+                    h.add_field(name=f"🧑 **Requested by**", value=f"<@{member.id}>")
+                    h.add_field(name=f"{deny_emoji} **Rejected by**", value=f"<@{payload.member.id}>")
+                    await bot.rolereq_message.edit(embed=h)
 
 
 @bot.event
 async def on_raw_reaction_remove(payload):
-    if bot.loading == False:
-        auth = False
-        message_id = payload.message_id
-        channel = 929955422922747906
-        try:
-            msg_id = bot.addrole_message.id
-        except:
-            msg_id = 000000000000000000
+    if payload.user_id != 907247505346035752:
+        if bot.loading == False:
+            auth = False
+            message_id = payload.message_id
+            channel = 929955422922747906
+            try:
+                msg_id = bot.addrole_message.id
+            except:
+                msg_id = 000000000000000000
 
-        if message_id == msg_id:
-            guild_id = payload.guild_id
-            guild = discord.utils.find(lambda g : g.id == guild_id, bot.guilds)
+            if message_id == msg_id:
+                guild_id = payload.guild_id
+                guild = discord.utils.find(lambda g : g.id == guild_id, bot.guilds)
 
-            if payload.emoji.name == '1️⃣':
-                bot.role = discord.utils.get(guild.roles, name = 'PrivateChatKey')
-                auth = True
-            elif payload.emoji.name == '2️⃣':
-                bot.role = discord.utils.get(guild.roles, name = 'President')
-                auth = True
-            elif payload.emoji.name == '3️⃣':
-                bot.role = discord.utils.get(guild.roles, name = 'Streamer')
-                auth = True
-            elif payload.emoji.name == '4️⃣':
-                bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ603')
-            elif payload.emoji.name == '5️⃣':
-                bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ604')
-            elif payload.emoji.name == '6️⃣':
-                bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ605')
-            elif payload.emoji.name == '7️⃣':
-                bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ609')
-            elif payload.emoji.name == '8️⃣':
-                bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ610')
-            elif payload.emoji.name == '9️⃣':
-                bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ611')
-            elif payload.emoji.name == emoji_list[0]:
-                bot.role = discord.utils.get(guild.roles, name = 'Order of the First')
-            elif payload.emoji.name == emoji_list[1]:
-                bot.role = discord.utils.get(guild.roles, name = 'นักตัดงานคุณภาพ')
-            elif payload.emoji.name == emoji_list[2]:
-                bot.role = discord.utils.get(guild.roles, name = 'Bot Developer')
-            elif payload.emoji.name == emoji_list[3]:
-                bot.role = discord.utils.get(guild.roles, name = 'เสพกาววีทูบเบอร์')
-            elif payload.emoji.name == emoji_list[4]:
-                bot.role = discord.utils.get(guild.roles, name = 'Programmer')
-            elif payload.emoji.name == emoji_list[5]:
-                bot.role = discord.utils.get(guild.roles, name = 'Sportsman')
-            elif payload.emoji.name == emoji_list[6]:
-                bot.role = discord.utils.get(guild.roles, name = "PlayerUnknown's Battlegrounds")
-            elif payload.emoji.name == emoji_list[7]:
-                bot.role = discord.utils.get(guild.roles, name = 'Microsoft Flight Simulator')
-            elif payload.emoji.name == emoji_list[8]:
-                bot.role = discord.utils.get(guild.roles, name = 'League of Legends')
-            elif payload.emoji.name == emoji_list[9]:
-                bot.role = discord.utils.get(guild.roles, name = 'Rainbow Six Siege')
-            elif payload.emoji.name == emoji_list[10]:
-                bot.role = discord.utils.get(guild.roles, name = 'Dead by Daylight')
-            elif payload.emoji.name == emoji_list[11]:
-                bot.role = discord.utils.get(guild.roles, name = 'Genshin Impact')
-            elif payload.emoji.name == emoji_list[12]:
-                bot.role = discord.utils.get(guild.roles, name = 'Forza Player')
-            elif payload.emoji.name == emoji_list[13]:
-                bot.role = discord.utils.get(guild.roles, name = 'Minecraft')
-            elif payload.emoji.name == emoji_list[14]:
-                bot.role = discord.utils.get(guild.roles, name = 'Valorant')
-            elif payload.emoji.name == emoji_list[15]:
-                bot.role = discord.utils.get(guild.roles, name = 'คณะล่าผี')
-            elif payload.emoji.name == emoji_list[16]:
-                bot.role = discord.utils.get(guild.roles, name = 'Roblox')
-            else:
-                bot.role = discord.utils.get(guild.roles, name = payload.emoji.name)
-
-            if bot.role is not None:
-                member = discord.utils.find(lambda m : m.id == payload.user_id, guild.members)
-                if member is not None:
-                    if auth == False:
-                        await member.remove_roles(bot.role)
-                        print("Role Remove Done")
-                    else:
-                        await member.remove_roles(bot.role)
-
-                        # ใช้กรณีลบ Request
-                        #channel = bot.get_channel(929670988092825630)
-                        #message_to_del = bot.rolereq_message
-                        #await channel.fetch_message(message_to_del.id)
-                        #await message_to_del.delete()
-                        c = discord.Embed(title = "🔧 **Role Request**", color = 0x80FF81)
-                        c.add_field(name=f"🎩 **Requested role**", value=f"`{bot.role}`")
-                        c.add_field(name=f"🧑 **Requested by**", value=f"<@{member.id}>")
-                        c.add_field(name=f"⛔ **Status**", value="*`Canceled`*")
-                        await bot.rolereq_message.edit(embed=c)
-
+                if payload.emoji.name == '1️⃣':
+                    bot.role = discord.utils.get(guild.roles, name = 'PrivateChatKey')
+                    auth = True
+                elif payload.emoji.name == '2️⃣':
+                    bot.role = discord.utils.get(guild.roles, name = 'President')
+                    auth = True
+                elif payload.emoji.name == '3️⃣':
+                    bot.role = discord.utils.get(guild.roles, name = 'Streamer')
+                    auth = True
+                elif payload.emoji.name == '4️⃣':
+                    bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ603')
+                elif payload.emoji.name == '5️⃣':
+                    bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ604')
+                elif payload.emoji.name == '6️⃣':
+                    bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ605')
+                elif payload.emoji.name == '7️⃣':
+                    bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ609')
+                elif payload.emoji.name == '8️⃣':
+                    bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ610')
+                elif payload.emoji.name == '9️⃣':
+                    bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ611')
+                elif payload.emoji.name == emoji_list[0]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Order of the First')
+                elif payload.emoji.name == emoji_list[1]:
+                    bot.role = discord.utils.get(guild.roles, name = 'นักตัดงานคุณภาพ')
+                elif payload.emoji.name == emoji_list[2]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Bot Developer')
+                elif payload.emoji.name == emoji_list[3]:
+                    bot.role = discord.utils.get(guild.roles, name = 'เสพกาววีทูบเบอร์')
+                elif payload.emoji.name == emoji_list[4]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Programmer')
+                elif payload.emoji.name == emoji_list[5]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Sportsman')
+                elif payload.emoji.name == emoji_list[6]:
+                    bot.role = discord.utils.get(guild.roles, name = "PlayerUnknown's Battlegrounds")
+                elif payload.emoji.name == emoji_list[7]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Microsoft Flight Simulator')
+                elif payload.emoji.name == emoji_list[8]:
+                    bot.role = discord.utils.get(guild.roles, name = 'League of Legends')
+                elif payload.emoji.name == emoji_list[9]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Rainbow Six Siege')
+                elif payload.emoji.name == emoji_list[10]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Dead by Daylight')
+                elif payload.emoji.name == emoji_list[11]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Genshin Impact')
+                elif payload.emoji.name == emoji_list[12]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Forza Player')
+                elif payload.emoji.name == emoji_list[13]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Minecraft')
+                elif payload.emoji.name == emoji_list[14]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Valorant')
+                elif payload.emoji.name == emoji_list[15]:
+                    bot.role = discord.utils.get(guild.roles, name = 'คณะล่าผี')
+                elif payload.emoji.name == emoji_list[16]:
+                    bot.role = discord.utils.get(guild.roles, name = 'Roblox')
                 else:
-                    print("Member is not found")
-            else:
-                print("Role is not found")
+                    bot.role = discord.utils.get(guild.roles, name = payload.emoji.name)
+
+                if bot.role is not None:
+                    member = discord.utils.find(lambda m : m.id == payload.user_id, guild.members)
+                    if member is not None:
+                        if auth == False:
+                            await member.remove_roles(bot.role)
+                            print("Role Remove Done")
+                        else:
+                            await member.remove_roles(bot.role)
+
+                            # ใช้กรณีลบ Request
+                            #channel = bot.get_channel(929670988092825630)
+                            #message_to_del = bot.rolereq_message
+                            #await channel.fetch_message(message_to_del.id)
+                            #await message_to_del.delete()
+                            c = discord.Embed(title = "🔧 **Role Request**", color = 0x80FF81)
+                            c.add_field(name=f"🎩 **Requested role**", value=f"`{bot.role}`")
+                            c.add_field(name=f"🧑 **Requested by**", value=f"<@{member.id}>")
+                            c.add_field(name=f"⛔ **Status**", value="*`Canceled`*")
+                            await bot.rolereq_message.edit(embed=c)
+
+                    else:
+                        print("Member is not found")
+                else:
+                    print("Role is not found")
 
 # Add Role on Join
 @bot.event
