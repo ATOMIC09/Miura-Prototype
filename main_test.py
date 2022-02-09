@@ -30,13 +30,14 @@ import gdrive_dl
 import audio2video
 import moviepy
 import earrape_warning
+import red_eye
 
 intents = discord.Intents.default()
 intents.members = True
 
 bot = commands.Bot(command_prefix='-', description="wat", intents=intents)
 bot.remove_command('help')
-bot.version = "Version 2.6 Beta"
+bot.version = "Version 2.7 Beta"
 
 @bot.command()
 async def help(ctx):
@@ -50,6 +51,7 @@ async def help(ctx):
     help.add_field(name="🔇 ปิดเสียงสมาชิก", value="`%mute [@USER] [เวลา]`")
     help.add_field(name="🔊 ยกเลิกการปิดเสียง", value="`%unmute [@USER]`")
     help.add_field(name="📄 แปลง PDF เป็นรูปภาพ", value="`%pdf2png`\n`%pdf2png_zip`")
+    help.add_field(name="📰 ดูคุณสมบัติรูปภาพ", value="`%imginfo`")
     help.add_field(name="❎ ยกเลิกคำสั่ง", value="`%c_[ชื่อคำสั่ง]`")
     await ctx.send(embed = help)
 
@@ -76,6 +78,7 @@ async def help_image(ctx):
     image.add_field(name="🎨 แปลงภาพขาวดำเป็นภาพสี", value="`%color`")
     image.add_field(name="🧹 ลบพื้นหลัง", value="`%removebg`")
     image.add_field(name="👺 Deep Fryer", value="`%deepfry`")
+    image.add_field(name="👁 ตาแดง", value="`%redeye`")
     image.add_field(name="↔ ยืดภาพ", value="`%wide`")
     image.add_field(name="↔↔ ยืดดดดดภาพ", value="`%ultrawide`")
     image.add_field(name="↗ ปรับสเกลภาพ", value="`%resize [PERCENT%]`\n`%resize [Width]x[Height]`\n\n**Ex:**\n`%resize 50`\n`%resize 50%`\n`%resize 1280x720`\n`%resize 1280 720`")
@@ -85,7 +88,8 @@ async def help_image(ctx):
 @bot.command()
 async def help_video(ctx):
     video = discord.Embed(title = "🎬 **Video Processing**", color = 0xFF9600)
-    video.add_field(name="🔨 สร้างวิดีโอจากไฟล์ภาพและเสียง", value="`%imgaudio`\n*(ต้องส่ง**ภาพ**ก่อนใช้คำสั่ง)*")
+    video.add_field(name="🔨 สร้างวิดีโอจากไฟล์ภาพและไฟล์เสียง", value="`%imgaudio`\n*(ต้องส่ง**ภาพ**ก่อนใช้คำสั่ง)*")
+    video.add_field(name="⚒ สร้างวิดีโอจากไฟล์ภาพและเสียงจาก Youtube", value="`%imgyt [URL]`\n*(ต้องส่ง**ภาพ**ก่อนใช้คำสั่ง)*")
     video.add_field(name="🧲 นำคลิปวิดีโอมาต่อกัน", value="`%videomix`\n*(ต้องส่ง**วิดีโอ**ก่อนใช้คำสั่ง)*")
     await ctx.send(embed = video)
     
@@ -110,6 +114,7 @@ async def update(ctx):
     update.add_field(name="5️⃣ V 2.4 | 20/12/2021", value="`• Add: Text on Image\n• Add: Grayscale to Color\n• Add: Deep Fryer\n• Fix: Countdown Style\n• Fix: Cancel Command\n• Delete: PrivateKey`")
     update.add_field(name="6️⃣ V 2.5 | 12/01/2022", value="`• Add: Scamming Protection\n• Add: Role Selector\n• Fix: มี Model ของ %color แล้ว`")
     update.add_field(name="7️⃣ V 2.6 | 21/01/2022", value="`• Add: Earrape Warning\n• Add: Video Processing`")
+    update.add_field(name="8️⃣ V 2.7 | 09/02/2022", value="`• Add: Red Eye Meme\n• Add: Image Properties\n• Add: Video Processing`")
     await ctx.send(embed = update)
 
 
@@ -1057,6 +1062,35 @@ async def resize(ctx,* , new_size: str):
         await ctx.send(file=file)
         #os.remove(f"A:/Documents/GitHub/Miura-Tester/{Name}")
 
+@bot.command()
+async def imginfo(ctx):
+    Name = "miura_autosave.png"
+    try:
+        os.rename("miura_autosave",Name)
+    except:
+        os.remove(Name)
+        os.rename("miura_autosave",Name)
+    image = cv2.imread(Name,cv2.IMREAD_UNCHANGED)
+
+    try:
+        # Save the transparency channel alpha
+        b_channel, g_channel, r_channel , alpha = cv2.split(image)
+        img_RGBA = cv2.merge((b_channel, g_channel, r_channel, alpha))
+    except:
+        # If have no alpha channel
+        b_channel, g_channel, r_channel = cv2.split(image)
+        img_RGBA = cv2.merge((b_channel, g_channel, r_channel))
+
+    height, width, channels = img_RGBA.shape
+    if channels == 1:
+        channels_out = "Grayscale"
+    elif channels == 2:
+        channels_out = "Grayscale Alpha"
+    elif channels == 3:
+        channels_out = "RGB"
+    elif channels == 4:
+        channels_out = "RGBA"
+    await ctx.send(f"↕ **Height :** `{height}`\n↔ **Width :** `{width}`\n<:apple_loading:940842814030360626> **Channel :** `{channels_out}`")
 
 @bot.command()
 async def pdf2png(ctx):
@@ -1395,7 +1429,60 @@ async def videomix(ctx):
         except:
             await ctx.send("<:Deny:921703523111022642> **Send video too late**")
     
+@bot.command()
+async def imgyt(ctx, url):
+    async with ctx.typing():
+        # Image
+        imgName = "audio2video_image.png"
+        try:
+            os.rename("miura_autosave",imgName)
+            shutil.move(imgName,f"audio2video_image_input/{imgName}")
+        except:
+            os.remove(imgName)
+            os.rename("miura_autosave",imgName)
+            shutil.move(imgName,f"audio2video_image_input/{imgName}")
+        
+        # Audio
+        YDL_OPTIONS = {'format': 'bestaudio[ext=m4a]', 'noplaylist': 'True', 'outtmpl': '%(title)s.%(ext)s'}
+        with YoutubeDL(YDL_OPTIONS) as ydl:
+            info = ydl.extract_info(url, download=True)
+            filename = ydl.prepare_filename(info)
 
+        shutil.move(filename,f"audio2video_audio_input/{filename}")
+
+        image_path = "A:/Documents/GitHub/Miura-Prototype/audio2video_image_input/audio2video_image.png"
+        audio_path = f"A:/Documents/GitHub/Miura-Prototype/audio2video_audio_input/{filename}"
+        output_path = "A:/Documents/GitHub/Miura-Prototype/audio2video_video_output/audio2video_output.mp4"
+        audio2video.add_static_image_to_audio(image_path, audio_path, output_path)
+
+        file = discord.File(output_path)
+        await ctx.send(file=file)
+        os.remove(image_path)
+        os.remove(audio_path)
+        os.remove(output_path)
+
+@bot.command()
+async def redeye(ctx):
+    async with ctx.typing():
+        # Image
+        imgName = "miura_red_eye.jpg"
+        try:
+            os.rename("miura_autosave",imgName)
+            shutil.move(imgName,f"source_img/{imgName}")
+        except:
+            os.remove(imgName)
+            os.rename("miura_autosave",imgName)
+            shutil.move(imgName,f"source_img/{imgName}")
+            
+        red_eye.imagecov(imgName)
+        output_path = "static/miura_red_eye.png"
+
+        try:
+            file = discord.File(output_path)
+            await ctx.send(file=file)
+            os.remove(output_path)
+        except:
+            await ctx.send("<:Deny:921703523111022642> **No eyes detected**")
 
 # Minecraft ESP32 Server Log
 #async def background_task():
@@ -1535,6 +1622,8 @@ async def on_message(message):
                     print(f"Error: {error}")
                 else:
                     if decisionFunctionDelete(loudness, maxamp):
+                        print(f"Loudness : {loudness}")
+                        print(f"Maxamp : {maxamp}")
                         await message.add_reaction("🔊")
                         await message.add_reaction("⚠️")
                         #os.remove("earrape.mp3")
