@@ -31,6 +31,7 @@ import audio2video
 import moviepy
 import earrape_warning
 import red_eye
+from petpetgif import petpet
 
 intents = discord.Intents.default()
 intents.members = True
@@ -78,6 +79,7 @@ async def help_image(ctx):
     image.add_field(name="🎨 แปลงภาพขาวดำเป็นภาพสี", value="`%color`")
     image.add_field(name="🧹 ลบพื้นหลัง", value="`%removebg`")
     image.add_field(name="👺 Deep Fryer", value="`%deepfry`")
+    image.add_field(name="🤚🏻🐶 Petpet Meme", value="`%pet`")
     image.add_field(name="👁 ตาแดง", value="`%redeye`")
     image.add_field(name="↔ ยืดภาพ", value="`%wide`")
     image.add_field(name="↔↔ ยืดดดดดภาพ", value="`%ultrawide`")
@@ -1562,16 +1564,38 @@ async def redeye(ctx):
             os.rename("miura_autosave",imgName)
             shutil.move(imgName,f"source_img/{imgName}")
             os.rename("miura_autosave2","miura_autosave")
-            
-        red_eye.imagecov(imgName)
-        output_path = "static/miura_red_eye.png"
-
+        
         try:
+            red_eye.imagecov(imgName)
+            output_path = "static/miura_red_eye.png"
+
             file = discord.File(output_path)
             await ctx.send(file=file)
             os.remove(output_path)
         except:
-            await ctx.send("<:Deny:921703523111022642> **No eyes detected**")
+            await ctx.send("<:Deny:921703523111022642> **Something went wrong**")
+
+@bot.command()
+async def pet(ctx):
+    async with ctx.typing():
+        Name = "miura_petpet.png"
+        src="miura_autosave"
+        dst="miura_autosave2"
+        try:
+            shutil.copy(src,dst)
+            os.rename("miura_autosave",Name)
+            os.rename("miura_autosave2","miura_autosave")
+        except:
+            os.remove(Name)
+            os.rename("miura_autosave",Name)
+            os.rename("miura_autosave2","miura_autosave")
+
+        petpet.make(Name, 'miura_petpet.gif')
+
+        file = discord.File('miura_petpet.gif')
+        await ctx.send(file=file)
+        os.remove('miura_petpet.gif')
+        os.remove(Name)
 
 # Minecraft ESP32 Server Log
 #async def background_task():
