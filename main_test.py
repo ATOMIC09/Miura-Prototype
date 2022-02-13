@@ -2167,19 +2167,32 @@ async def on_member_join(person):
         new_member = 851081137093738576 # Bot Datacenter
         await person.add_roles(person.guild.get_role(new_member))
 
+
+
 @bot.event
 async def on_ready():
     await bot.change_presence(activity=discord.Game(name=bot.version))
-    print("Downloading : colorization_release_v2.caffemodel")
-    gdrive_dl.download_file_from_google_drive("1rVl9NFS21ckBAD7tEYGrZkpHWtPZvtfy", "A:/Documents/GitHub/Miura-Prototype/model/colorization_release_v2.caffemodel")
-    print("Downloading : shape_predictor_68_face_landmarks.dat")
-    gdrive_dl.download_file_from_google_drive("1MycdtBY4bIlfOcIokkEtDft8qaqm3lqI", "A:/Documents/GitHub/Miura-Prototype/gaze_tracking/trained_models/shape_predictor_68_face_landmarks.dat")
+    #print("Downloading : colorization_release_v2.caffemodel")
+    #gdrive_dl.download_file_from_google_drive("1rVl9NFS21ckBAD7tEYGrZkpHWtPZvtfy", "A:/Documents/GitHub/Miura-Prototype/model/colorization_release_v2.caffemodel")
+    #print("Downloading : shape_predictor_68_face_landmarks.dat")
+    #gdrive_dl.download_file_from_google_drive("1MycdtBY4bIlfOcIokkEtDft8qaqm3lqI", "A:/Documents/GitHub/Miura-Prototype/gaze_tracking/trained_models/shape_predictor_68_face_landmarks.dat")
+    status_change.start()
     print('Miura Tester Started')
 
 @bot.event
 async def on_command_error(ctx, error):
     await ctx.send(f"⚠ **Error:** `{error}`")
     raise error
+
+@tasks.loop(seconds=301)
+async def status_change():
+    vc = bot.get_channel(942363499777126411)
+
+    try:
+        requests.get("https://exynas.myddns.me")
+        await vc.edit(name="Exynas : 🟢 ONLINE")
+    except:
+        await vc.edit(name="Exynas : 🔴 OFFLINE")
 
 #bot.loop.create_task(background_task())
 Token = os.environ["MiuraTesterToken"]
