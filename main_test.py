@@ -33,6 +33,8 @@ import earrape_warning
 import red_eye
 from petpetgif import petpet
 import gtts
+import json
+import gimage_search
 
 intents = discord.Intents.default()
 intents.members = True
@@ -1622,6 +1624,34 @@ async def tts(ctx,language: str,*, text: str):
         file = discord.File('miura_tts.mp3')
         await ctx.send(file=file)
         os.remove('miura_tts.mp3')
+
+@bot.command(pass_context = True)
+async def imgser(ctx, *, url: str):
+    if "http" in url:
+        gimage_search.name(url)
+        print("WAIT")
+    else:
+        Name = "miura_search.png"
+        src="miura_autosave"
+        dst="miura_autosave2"
+        try:
+            shutil.copy(src,dst)
+            os.rename("miura_autosave",Name)
+            os.rename("miura_autosave2","miura_autosave")
+        except:
+            os.remove(Name)
+            os.rename("miura_autosave",Name)
+            os.rename("miura_autosave2","miura_autosave")
+        
+        filePath = Name
+        searchUrl = 'https://yandex.com/images/search'
+        files = {'upfile': ('blob', open(filePath, 'rb'), 'image/jpeg')}
+        params = {'rpt': 'imageview', 'format': 'json', 'request': '{"blocks":[{"block":"b-page_type_search-by-image__link"}]}'}
+        response = requests.post(searchUrl, params=params, files=files)
+        query_string = json.loads(response.content)['blocks'][0]['params']['url']
+        img_search_url= searchUrl + '?' + query_string
+        await ctx.send(img_search_url)
+
 
 # Minecraft ESP32 Server Log
 #async def background_task():
