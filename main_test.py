@@ -34,13 +34,13 @@ import red_eye
 from petpetgif import petpet
 import gtts
 import json
+import psutil
 
 intents = discord.Intents.default()
 intents.members = True
 
-bot = commands.Bot(command_prefix='-', description="wat", intents=intents)
+bot = commands.Bot(command_prefix='-', description="wat", intents=intents, activity=discord.Game(name="LOADING □□□□□"))
 bot.remove_command('help')
-bot.version = "Version 2.7 Beta"
 
 @bot.command()
 async def help(ctx):
@@ -2197,12 +2197,19 @@ async def on_member_join(person):
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(activity=discord.Game(name=bot.version))
+    for filled in range(0,5):
+        write = 'LOADING ' + '■' * filled + '□' * (5 - filled)
+        await bot.change_presence(activity=discord.Game(name=write))
+        await asyncio.sleep(0.5)
+    await asyncio.sleep(2)
+    await bot.change_presence(activity=discord.Game(name="LOADING ■■■■■ ✅"))
+
     #print("Downloading : colorization_release_v2.caffemodel")
     #gdrive_dl.download_file_from_google_drive("1rVl9NFS21ckBAD7tEYGrZkpHWtPZvtfy", "A:/Documents/GitHub/Miura-Prototype/model/colorization_release_v2.caffemodel")
     #print("Downloading : shape_predictor_68_face_landmarks.dat")
     #gdrive_dl.download_file_from_google_drive("1MycdtBY4bIlfOcIokkEtDft8qaqm3lqI", "A:/Documents/GitHub/Miura-Prototype/gaze_tracking/trained_models/shape_predictor_68_face_landmarks.dat")
     status_change.start()
+    host_status_change.start()
     print('Miura Tester Started')
 
 @bot.event
@@ -2214,11 +2221,19 @@ async def on_command_error(ctx, error):
 async def status_change():
     vc = bot.get_channel(942363499777126411)
 
+    # Check Exynas
     try:
         requests.get("https://exynas.myddns.me")
         await vc.edit(name="Exynas : 🟢 ONLINE")
     except:
         await vc.edit(name="Exynas : 🔴 OFFLINE")
+
+@tasks.loop(seconds=20)
+async def host_status_change():
+    # Check Hosting Status
+    cpu = psutil.cpu_percent()
+    ram = psutil.virtual_memory()[2]
+    await bot.change_presence(activity=discord.Game(name=f"CPU {cpu}% | RAM {ram}%"))
 
 #bot.loop.create_task(background_task())
 Token = os.environ["MiuraTesterToken"]
