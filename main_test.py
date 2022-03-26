@@ -39,7 +39,7 @@ import psutil
 intents = discord.Intents.default()
 intents.members = True
 
-bot = commands.Bot(command_prefix='-', description="wat", intents=intents, activity=discord.Game(name="LOADING □□□□□"))
+bot = commands.Bot(command_prefix='-', description="wat", intents=intents, activity=discord.Game(name="LOADING ○○○○ 🔴"))
 bot.remove_command('help')
 
 @bot.command()
@@ -233,6 +233,7 @@ async def c_countdown(ctx):
 
 # Countdown Disconnect
 bot.timer_dis = 0
+bot.member_exc = []
 
 @bot.command()
 async def countdis(ctx, timer: int):
@@ -286,6 +287,7 @@ async def countdis(ctx, timer: int):
         message = await ctx.send(f"Time remaining: **{year_str} years {month_str} months {day_str} days {hour_str} hours {minute_str} mins {second_str} secs**")
 
     while bot.timer_dis >= 0:
+        bot.member_dis = ctx.message.author.voice.channel.members # ตราบใดที่ยังไม่หมดเวสาให้เก็บจำนวนคน(ที่จะออก)
         year = int(bot.timer_dis / 31556926)
         sade1 = int(bot.timer_dis % 31556926)
         month = int(sade1 / 2629744)
@@ -331,12 +333,24 @@ async def countdis(ctx, timer: int):
 
     if bot.timer_dis >= -3 and bot.timer_dis <= 1:
         await message.edit(content="Time remaining: **Time Up !!**")
-        members = channel.members
-        for member in members:
-            await member.move_to(None)
-            people_counter += 1
-        await ctx.send(f"ℹ **Disconnected {people_counter} users from `{channel}` successfully**")
 
+        if bot.member_exc == []: # ไม่มีใครยกเว้น
+            members = channel.members
+            for member in members:
+                await member.move_to(None)
+                people_counter += 1
+            await ctx.send(f"ℹ **Disconnected {people_counter} users from `{channel}` successfully**")
+
+        else:
+            for member in members:
+                if member not in bot.member_exc: # เช็คว่าใครไม่ออก
+                    await member.move_to(None)
+                    people_counter += 1
+            await ctx.send(f"ℹ **Disconnected {people_counter} users from `{channel}` successfully**")
+            bot.member_exc = []
+        
+
+        
     elif bot.timer_dis < -5:
         await message.edit(content="Time remaining: **CANCELED !!**")
 
@@ -345,6 +359,26 @@ async def countdis(ctx, timer: int):
 async def c_countdis(ctx):
     bot.timer_dis = -6
     await ctx.send("⏹ **Canceled**")
+
+bot.last_use = []
+
+@bot.command()
+async def exc(ctx):
+    try:
+        if ctx.message.author.id not in bot.last_use:
+            bot.member_exc.append(ctx.message.author) # คนที่จะไม่ออก
+            bot.last_use.append(ctx.message.author.id)
+            await ctx.send(f"<:Approve:921703512382009354> **Except:** <@{ctx.message.author.id}>")
+        
+        else:
+            bot.member_exc.remove(ctx.message.author) # คนที่จะไม่ออก
+            bot.last_use.append(ctx.message.author.id)
+            await ctx.send(f"⛔ **Include:** <@{ctx.message.author.id}>")
+    except:
+        print("Except not in list")
+        bot.member_exc.append(ctx.message.author) # คนที่จะไม่ออก(ไม่รู้ทำไม Error)
+        bot.last_use.append(ctx.message.author.id)
+        await ctx.send(f"<:Approve:921703512382009354> **Except:** <@{ctx.message.author.id}>")
 
 @bot.command()
 async def send(ctx, id, *, text):
@@ -366,7 +400,7 @@ async def mute(ctx, user: discord.Member, time: int):
 
     if bot.mute_cancel_code == 0:
         await user.remove_roles(role_mute)
-        await ctx.send(f"**{user}** has been unmuted ✅")
+        await ctx.send(f"**{user}** has been unmuted 🔊")
     else:
         bot.mute_cancel_code = 0
         return
@@ -377,7 +411,7 @@ async def unmute(ctx, user: discord.Member):
     try:
         await user.remove_roles(role_mute)
         bot.mute_cancel_code = 1
-        await ctx.send(f"**{user}** has been unmuted ✅")
+        await ctx.send(f"**{user}** has been unmuted 🔊")
     except:
         await ctx.send(f"**{user}** is not muted ⚠️")
 
@@ -500,7 +534,7 @@ async def c(ctx):
     bot.queue.clear()
     bot.queue_name.clear()
     bot.queue_notdel.clear()
-    await ctx.send("✅ **Queue Cleared**")
+    await ctx.send("<:Approve:921703512382009354> **Queue Cleared**")
 
 @bot.command()
 async def resume(ctx):
@@ -548,11 +582,11 @@ async def plocal(ctx):
 
     try: 
         voice.play(discord.FFmpegPCMAudio(source=audioName,executable="A:/Documents/GitHub/Miura-Tester/ffmpeg.exe"))
-        await ctx.send("✅ **Now Playing**")
+        await ctx.send("🔊 **Now Playing**")
     except:
         voice.stop()
         voice.play(discord.FFmpegPCMAudio(source=audioName,executable="A:/Documents/GitHub/Miura-Tester/ffmpeg.exe"))
-        await ctx.send("✅ **Now Playing**")
+        await ctx.send("🔊 **Now Playing**")
 
 # Audio Downloader
 @bot.command()
@@ -1161,7 +1195,7 @@ async def pdf2png(ctx):
         os.remove(f"A:/Documents/GitHub/Miura-Tester/pdf2image_output/page{i+1}.png")
     os.remove(f"A:/Documents/GitHub/Miura-Tester/{Name}")
     await asyncio.sleep(2)
-    await ctx.send(f"✅ **The document was successfully converted\nℹ Number of pages: **{i+1}")
+    await ctx.send(f"<:Approve:921703512382009354> **The document was successfully converted\nℹ Number of pages: **{i+1}")
 
 @bot.command()
 async def pdf2png_zip(ctx):
@@ -1194,7 +1228,7 @@ async def pdf2png_zip(ctx):
     os.remove(f"A:/Documents/GitHub/Miura-Tester/{Name}")
     os.remove(f"A:/Documents/GitHub/Miura-Tester/{author}_{i+1}pages.zip")
     await asyncio.sleep(2)
-    await ctx.send(f"✅ **The document was successfully converted\nℹ Number of pages: **{i+1}")
+    await ctx.send(f"<:Approve:921703512382009354> **The document was successfully converted\nℹ Number of pages: **{i+1}")
 
 @bot.command()
 async def removebg(ctx):
@@ -1848,8 +1882,8 @@ emoji_list = ['keycap_ten',
             'num26']
 
 role_list = ['PrivateChatKey',
+            'ผู้แสวงหาวาร์ป',
             'President',
-            'Streamer',
             'SKR#24ㅣ603',
             'SKR#24ㅣ604',
             'SKR#24ㅣ605',
@@ -1886,7 +1920,7 @@ bot.member_request = ""
 @bot.command()
 async def addrole(ctx):
     a = discord.Embed(title = "📝 **React me to assign the role**", color = 0x00FF00)
-    a.add_field(name="**🔧 Management**", value=f":one: `{role_list[0]}`\n:two: `{role_list[1]}`\n:three: `{role_list[2]}`\n(กดเลือกทีละอันและต้องรอการยืนยัน)")
+    a.add_field(name="**🔧 Management**", value=f":one: `{role_list[0]}`\n:two: `{role_list[1]}`\n:three: `{role_list[2]}`\n")
     a.add_field(name="**🏫 School**", value=f":four: `{role_list[3]}`\n:five: `{role_list[4]}`\n:six: `{role_list[5]}`\n:seven: `{role_list[6]}`\n:eight: `{role_list[7]}`\n:nine: `{role_list[8]}`")
     a.add_field(name="**💡 Other**", value=f"{num_emoji_list[0]} `{role_list[9]}`\n{num_emoji_list[1]} `{role_list[10]}`\n{num_emoji_list[2]} `{role_list[11]}`\n{num_emoji_list[3]} `{role_list[12]}`\n{num_emoji_list[4]} `{role_list[13]}`\n{num_emoji_list[5]} `{role_list[14]}`")
     a.add_field(name="**🎮 Game**", value=f"{num_emoji_list[6]} `{role_list[15]}`\n{num_emoji_list[7]} `{role_list[16]}`\n{num_emoji_list[8]} `{role_list[17]}`\n{num_emoji_list[9]} `{role_list[18]}`\n{num_emoji_list[10]} `{role_list[19]}`\n{num_emoji_list[11]} `{role_list[20]}`\n{num_emoji_list[12]} `{role_list[21]}`\n{num_emoji_list[13]} `{role_list[22]}`\n{num_emoji_list[14]} `{role_list[23]}`\n{num_emoji_list[15]} `{role_list[24]}`\n{num_emoji_list[16]} `{role_list[25]}`")
@@ -1923,10 +1957,10 @@ async def on_raw_reaction_add(payload):
                     bot.role = discord.utils.get(guild.roles, name = 'PrivateChatKey')
                     auth = True
                 elif payload.emoji.name == '2️⃣':
-                    bot.role = discord.utils.get(guild.roles, name = 'President')
+                    bot.role = discord.utils.get(guild.roles, name = 'ผู้แสวงหาวาร์ป')
                     auth = True
                 elif payload.emoji.name == '3️⃣':
-                    bot.role = discord.utils.get(guild.roles, name = 'Streamer')
+                    bot.role = discord.utils.get(guild.roles, name = 'President')
                     auth = True
                 elif payload.emoji.name == '4️⃣':
                     bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ603')
@@ -2102,10 +2136,10 @@ async def on_raw_reaction_remove(payload):
                     bot.role = discord.utils.get(guild.roles, name = 'PrivateChatKey')
                     auth = True
                 elif payload.emoji.name == '2️⃣':
-                    bot.role = discord.utils.get(guild.roles, name = 'President')
+                    bot.role = discord.utils.get(guild.roles, name = 'ผู้แสวงหาวาร์ป')
                     auth = True
                 elif payload.emoji.name == '3️⃣':
-                    bot.role = discord.utils.get(guild.roles, name = 'Streamer')
+                    bot.role = discord.utils.get(guild.roles, name = 'President')
                     auth = True
                 elif payload.emoji.name == '4️⃣':
                     bot.role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ603')
@@ -2197,19 +2231,17 @@ async def on_member_join(person):
 
 @bot.event
 async def on_ready():
-    for filled in range(0,5):
-        write = 'LOADING ' + '■' * filled + '□' * (5 - filled)
-        await bot.change_presence(activity=discord.Game(name=write))
-        await asyncio.sleep(0.5)
-    await asyncio.sleep(2)
-    await bot.change_presence(activity=discord.Game(name="LOADING ■■■■■ ✅"))
-
+    #await bot.change_presence(activity=discord.Game(name="LOADING ●○○○ 🟡"))
     #print("Downloading : colorization_release_v2.caffemodel")
     #gdrive_dl.download_file_from_google_drive("1rVl9NFS21ckBAD7tEYGrZkpHWtPZvtfy", "A:/Documents/GitHub/Miura-Prototype/model/colorization_release_v2.caffemodel")
+    #await bot.change_presence(activity=discord.Game(name="LOADING ●●○○ 🟡"))
     #print("Downloading : shape_predictor_68_face_landmarks.dat")
     #gdrive_dl.download_file_from_google_drive("1MycdtBY4bIlfOcIokkEtDft8qaqm3lqI", "A:/Documents/GitHub/Miura-Prototype/gaze_tracking/trained_models/shape_predictor_68_face_landmarks.dat")
+    #await bot.change_presence(activity=discord.Game(name="LOADING ●●●○ 🟡"))
     status_change.start()
     host_status_change.start()
+    #await asyncio.sleep(1)
+    await bot.change_presence(activity=discord.Game(name="LOADING ●●●● 🟢"))
     print('Miura Tester Started')
 
 @bot.event
