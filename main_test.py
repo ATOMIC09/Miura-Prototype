@@ -41,7 +41,7 @@ import qrcode
 intents = discord.Intents.default()
 intents.members = True
 
-bot = commands.Bot(command_prefix='-', description="wat", intents=intents, activity=discord.Game(name="LOADING ○○○○ 🔴"))
+bot = commands.Bot(command_prefix='-', description="wat", intents=intents, activity=discord.Game(name="STARTING ○○○○ 🔴"))
 bot.remove_command('help')
 
 @bot.command()
@@ -93,8 +93,8 @@ async def help_image(ctx):
     image.add_field(name="⚠️ QR Code Generator (SPOILER)", value="`%qrs [Text]`")
     image.add_field(name="↔ ยืดภาพ", value="`%wide`")
     image.add_field(name="↔↔ ยืดดดดดภาพ", value="`%ultrawide`")
-    image.add_field(name="↗ ปรับสเกลภาพ", value="`%resize [PERCENT%]`\n`%resize [Width]x[Height]`\n\n**Ex:**\n`%resize 50`\n`%resize 50%`\n`%resize 1280x720`\n`%resize 1280 720`")
-    image.add_field(name="✏ เขียนข้อความบนภาพ", value="`%text [ข้อความ] | [สี] | [ขนาด] | [ตำแหน่ง] | [ความหนา]`\n*(ไม่จำเป็นต้องกรอกข้อมูลทั้งหมด)*\n\n**Ex:**\n`%text HELLO | น้ำเงิน | 5 | ล่าง | 3`")
+    image.add_field(name="↗ ปรับสเกลภาพ", value="`%resize [PERCENT%]`\n`%resize [Width]x[Height]`\n\n**e.g.**\n`%resize 50`\n`%resize 50%`\n`%resize 1280x720`\n`%resize 1280 720`")
+    image.add_field(name="✏ เขียนข้อความบนภาพ", value="`%text [ข้อความ] | [สี] | [ขนาด] | [ตำแหน่ง] | [ความหนา]`\n*(ไม่จำเป็นต้องกรอกข้อมูลทั้งหมด)*\n\n**e.g.**\n`%text HELLO | น้ำเงิน | 5 | ล่าง | 3`")
     await ctx.send(embed = image)
 
 @bot.command()
@@ -2175,17 +2175,17 @@ async def on_member_join(person):
 
 @bot.event
 async def on_ready():
-    #await bot.change_presence(activity=discord.Game(name="LOADING ●○○○ 🟡"))
+    #await bot.change_presence(activity=discord.Game(name="STARTING ●○○○ 🟡"))
     #print("Downloading : colorization_release_v2.caffemodel")
     #gdrive_dl.download_file_from_google_drive("1rVl9NFS21ckBAD7tEYGrZkpHWtPZvtfy", "A:/Documents/GitHub/Miura-Prototype/model/colorization_release_v2.caffemodel")
-    #await bot.change_presence(activity=discord.Game(name="LOADING ●●○○ 🟡"))
+    #await bot.change_presence(activity=discord.Game(name="STARTING ●●○○ 🟡"))
     #print("Downloading : shape_predictor_68_face_landmarks.dat")
     #gdrive_dl.download_file_from_google_drive("1MycdtBY4bIlfOcIokkEtDft8qaqm3lqI", "A:/Documents/GitHub/Miura-Prototype/gaze_tracking/trained_models/shape_predictor_68_face_landmarks.dat")
-    #await bot.change_presence(activity=discord.Game(name="LOADING ●●●○ 🟡"))
+    #await bot.change_presence(activity=discord.Game(name="STARTING ●●●○ 🟡"))
     status_change.start()
     host_status_change.start()
     #await asyncio.sleep(1)
-    await bot.change_presence(activity=discord.Game(name="LOADING ●●●● 🟢"))
+    await bot.change_presence(activity=discord.Game(name="STARTING ●●●● 🟢"))
     print('Miura Tester Started')
 
 @bot.event
